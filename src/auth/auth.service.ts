@@ -1,8 +1,8 @@
 import { Injectable, BadRequestException, InternalServerErrorException } from '@nestjs/common';
+import util from "util"
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserType } from '@user/user.dto';
+import { UserLogin, UserType } from '@user/user.dto';
 import { User } from '@entity/user/user';
-import { v4 as uuidv4 } from 'uuid';
 import { comparePassword, hashPassword } from '@utils/helper';
 import { OrganizationType } from '@organisation/org.dto';
 import { Organization } from '@entity/Organisation/org';
@@ -50,23 +50,23 @@ export class AuthService {
   }
 
 
-  async login(email: string, password: string): Promise<User> {
+  async login(details: UserLogin): Promise<User> {
     try {
-      const user = await this.userRepo.findOne({ where: { email } })
-      console.log(`${user}`);
+      const user = await this.userRepo.findOne({ where: { email: details.email } })
       if (!user) {
-        throw new BadRequestException('Invalid email or password');
+        throw new BadRequestException('Invalid email');
       }
 
-      const isValid = await comparePassword(password, user.password);
+      const isValid = await comparePassword(details.password, user.password);
 
       if (!isValid) {
-        throw new BadRequestException('Invalid email or password');
+        throw new BadRequestException('Invalid password');
       }
 
       return user;
     } catch (error) {
       console.error(error);
+      throw error
     }
   }
 }

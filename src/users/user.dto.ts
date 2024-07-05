@@ -1,4 +1,4 @@
-import { IsUUID, IsString, IsNotEmpty, IsEmail, MinLength, IsPhoneNumber } from 'class-validator';
+import { IsString, IsNotEmpty, IsEmail, MinLength, IsPhoneNumber } from 'class-validator';
 
 export class UserType {
   userId: string;
@@ -22,4 +22,15 @@ export class UserType {
 
   @IsPhoneNumber("NG")
   phone: string;
+}
+
+export class UserLogin {
+  @IsString()
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
+
+  @IsString()
+  @IsNotEmpty()
+  password: string;
 }

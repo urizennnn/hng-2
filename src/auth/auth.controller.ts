@@ -1,6 +1,6 @@
 import { AuthService } from '@auth/auth.service';
 import { Body, Controller, Get, HttpStatus, Post, Req, Res } from '@nestjs/common';
-import { UserType } from '@user/user.dto';
+import { UserLogin, UserType } from '@user/user.dto';
 import { Response } from 'express';
 
 @Controller('auth')
@@ -30,10 +30,9 @@ export class AuthController {
   }
 
   @Post("/login")
-  async login(@Res() res: Response, @Body() email: string, password: string) {
+  async login(@Res() res: Response, @Body() details: UserLogin) {
     try {
-      const user = await this.auth.login(email, password);
-      console.log(`${user}`);
+      const user = await this.auth.login(details);
       return res.status(HttpStatus.OK).json({ status: "success", message: "Login successful", data: user });
     } catch (error) {
       console.error(error);
