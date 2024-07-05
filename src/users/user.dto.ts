@@ -1,8 +1,6 @@
 import { IsUUID, IsString, IsNotEmpty, IsEmail, MinLength, IsPhoneNumber } from 'class-validator';
 
 export class UserType {
-  @IsUUID()
-  @IsNotEmpty()
   userId: string;
 
   @IsString()
@@ -22,6 +20,6 @@ export class UserType {
   @MinLength(8)
   password: string;
 
-  @IsPhoneNumber()
+  @IsPhoneNumber("NG")
   phone: string;
 }
