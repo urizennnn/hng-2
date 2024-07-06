@@ -58,12 +58,12 @@ describe('AuthService and AuthController', () => {
       const userDetails: UserRegister = {
         firstName: "John",
         lastName: "Akaaha",
-        email: "test@gmail.comm",
+        email: "test@gmail.com",
         password: "stringer",
         phone: "07041386799"
       };
       const hashedPassword = 'hashedPassword123';
-      const newUser = { ...userDetails, id: '1', password: hashedPassword };
+      const newUser = { ...userDetails, userId: '1', password: hashedPassword };
       const accessToken = 'mockAccessToken';
 
       userRepo.findOne.mockResolvedValue(null);
