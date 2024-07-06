@@ -1,5 +1,5 @@
-import { Organization } from '@entity/Organisation/org';
-import { User } from '@entity/user/user';
+import { Organization } from "../typeorm/entities/Organisation/org"
+import { User } from '../typeorm/entities/user/user';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';

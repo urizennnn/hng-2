@@ -1,9 +1,13 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "commonjs", // Compatible with Node.js and Jest
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
+    "types": [
+      "node",
+      "jest"
+    ],
     "experimentalDecorators": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
@@ -36,7 +40,18 @@
       ],
       "@user/*": [
         "src/users/*"
+      ],
+      "@test/*": [
+        "src/test/*"
       ]
     }
-  }
+  },
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "test"
+  ]
 }

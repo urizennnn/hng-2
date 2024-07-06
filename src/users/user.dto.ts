@@ -18,7 +18,7 @@ export class UserRegister {
   password: string;
 
   @IsString()
-  phone: string;
+  phone?: string;
 }
 
 export class UserLogin {

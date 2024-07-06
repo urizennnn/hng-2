@@ -1,6 +1,6 @@
-import "module-alias/register"
 import { NestFactory } from '@nestjs/core';
 import "dotenv/config"
+import "module-alias/register"
 import { AppModule } from './app.module';
 import logger from "morgan"
 import cookie from "cookie-parser"

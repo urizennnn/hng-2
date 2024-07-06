@@ -1,9 +1,9 @@
-import { Organization } from '@entity/Organisation/org';
-import { User } from '@entity/user/user';
+import { Organization } from '../typeorm/entities/Organisation/org';
+import { User } from '../typeorm/entities/user/user';
 import { Injectable, BadRequestException, UnprocessableEntityException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserLogin, UserRegister } from '@user/user.dto';
-import { comparePassword, hashPassword } from '@utils/helper';
+import { UserLogin, UserRegister } from '../users/user.dto';
+import { comparePassword, hashPassword } from '../../utils/helper';
 import { Repository } from 'typeorm';
 
 @Injectable()

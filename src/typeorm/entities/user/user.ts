@@ -1,4 +1,4 @@
-import { Organization } from '@entity/Organisation/org';
+import { Organization } from '../Organisation/org';
 import { Entity, Column, PrimaryGeneratedColumn, Unique, OneToMany, JoinTable, ManyToMany } from 'typeorm';
 
 @Entity()

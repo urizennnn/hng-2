@@ -1,8 +1,8 @@
 import { Body, Controller, Post, HttpStatus, Res, UsePipes, ValidationPipe } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Response } from 'express';
-import { JwtAuth } from 'src/middleware/jwt';
-import { UserLogin, UserRegister } from '@user/user.dto';
+import { JwtAuth } from '../middleware/jwt';
+import { UserLogin, UserRegister } from '../users/user.dto';
 
 @Controller('auth')
 export class AuthController {
