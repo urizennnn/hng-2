@@ -1,4 +1,4 @@
-import { Body, Controller, Post, HttpStatus, Res, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Post, HttpStatus, Res, UsePipes, ValidationPipe, Get } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Response } from 'express';
 import { JwtAuth } from '../middleware/jwt';
@@ -10,6 +10,11 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly jwt: JwtAuth
   ) { }
+
+  @Get('/')
+  async home() {
+    return "Welcome to the auth service";
+  }
 
   @Post('/register')
   @UsePipes(new ValidationPipe({ transform: true }))
