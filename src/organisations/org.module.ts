@@ -4,6 +4,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { Organization } from '@entity/Organisation/org';
 import { OrgController } from './org.controller';
 import { OrgService } from './org.service';
+import { User } from '@entity/user/user';
+import { JwtAuth } from 'src/middleware/jwt';
 
 @Module({
   imports: [
@@ -12,9 +14,9 @@ import { OrgService } from './org.service';
       signOptions: {
         expiresIn: process.env.JWT_LIMIT as string
       },
-    }), TypeOrmModule.forFeature([Organization]),
+    }), TypeOrmModule.forFeature([Organization, User]),
   ],
-  providers: [OrgService],
+  providers: [OrgService, JwtAuth],
   controllers: [OrgController]
 })
 export class OrgModule { }

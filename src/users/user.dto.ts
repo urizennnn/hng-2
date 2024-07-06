@@ -1,26 +1,23 @@
 import { IsString, IsNotEmpty, IsEmail, MinLength, IsPhoneNumber } from 'class-validator';
 
-export class UserType {
-  userId: string;
-
-  @IsString()
+export class UserRegister {
   @IsNotEmpty()
+  @IsString()
   firstName: string;
 
-  @IsString()
   @IsNotEmpty()
+  @IsString()
   lastName: string;
 
   @IsEmail()
-  @IsNotEmpty()
   email: string;
 
-  @IsString()
   @IsNotEmpty()
-  @MinLength(8)
+  @IsString()
+  @MinLength(6)
   password: string;
 
-  @IsPhoneNumber("NG")
+  @IsString()
   phone: string;
 }
 

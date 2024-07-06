@@ -1,5 +1,5 @@
 import { User } from '@entity/user/user';
-import { Entity, Column, PrimaryGeneratedColumn, Unique, ManyToMany, JoinTable } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Unique, ManyToMany, JoinTable, ManyToOne } from 'typeorm';
 
 @Entity()
 @Unique(['orgId'])
@@ -14,6 +14,5 @@ export class Organization {
 	description: string;
 
 	@ManyToMany(() => User, user => user.organizations)
-	@JoinTable()
 	users: User[];
 }

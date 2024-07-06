@@ -9,3 +9,18 @@ export class OrganizationType {
   @IsOptional()
   description?: string;
 }
+
+export class CreateOrgDto {
+  @IsNotEmpty()
+  @IsString()
+  name: string;
+
+  @IsString()
+  description: string;
+}
+
+export class AddUserDto {
+  @IsNotEmpty()
+  @IsString()
+  userId: string;
+}

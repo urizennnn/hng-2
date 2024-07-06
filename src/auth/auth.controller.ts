@@ -1,42 +1,62 @@
-import { AuthService } from '@auth/auth.service';
-import { Body, Controller, Get, HttpStatus, Post, Req, Res } from '@nestjs/common';
-import { UserLogin, UserType } from '@user/user.dto';
+import { Body, Controller, Post, HttpStatus, Res, UsePipes, ValidationPipe } from '@nestjs/common';
+import { AuthService } from './auth.service';
 import { Response } from 'express';
+import { JwtAuth } from 'src/middleware/jwt';
+import { UserLogin, UserRegister } from '@user/user.dto';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly auth: AuthService) { }
+  constructor(
+    private readonly authService: AuthService,
+    private readonly jwt: JwtAuth
+  ) { }
 
-
-  @Get("/")
-  async getResponse(@Res() res: Response, @Req() _: Request) {
+  @Post('/register')
+  @UsePipes(new ValidationPipe({ transform: true }))
+  async register(@Res() res: Response, @Body() userDetails: UserRegister) {
     try {
-      const response = await this.auth.getResponse()
-      return res.status(HttpStatus.OK).json({ response, message: "Hello World!" });
+      const user = await this.authService.register(userDetails);
+      const accessToken = this.jwt.SendCookie({ email: user.email }, res);
+      return res.status(HttpStatus.CREATED).json({
+        status: "success",
+        message: "Registration successful",
+        data: {
+          accessToken,
+          user
+        }
+      });
     } catch (error) {
       console.error(error);
+      return res.status(HttpStatus.BAD_REQUEST).json({
+        status: "Bad request",
+        message: error.message || "Registration failed",
+        statusCode: HttpStatus.BAD_REQUEST
+      });
     }
   }
 
-  @Post("/register")
-  async register(@Res() res: Response, @Body() details: UserType) {
+  @Post('/login')
+  @UsePipes(new ValidationPipe({ transform: true }))
+  async login(@Res() res: Response, @Body() loginDetails: UserLogin) {
     try {
-      const user = await this.auth.register(details);
-      return res.status(HttpStatus.CREATED).json({ status: "success", message: "Registration successful", data: user });
+      const user = await this.authService.login(loginDetails);
+      const accessToken = this.jwt.SendCookie({ email: user.email }, res);
+      return res.status(HttpStatus.OK).json({
+        status: "success",
+        message: "Login successful",
+        data: {
+          accessToken,
+          user
+        }
+      });
     } catch (error) {
       console.error(error);
-      return res.status(HttpStatus.BAD_REQUEST).json({ status: "Bad request", message: "Registration failed", statusCode: HttpStatus.BAD_REQUEST });
-    }
-  }
-
-  @Post("/login")
-  async login(@Res() res: Response, @Body() details: UserLogin) {
-    try {
-      const user = await this.auth.login(details);
-      return res.status(HttpStatus.OK).json({ status: "success", message: "Login successful", data: user });
-    } catch (error) {
-      console.error(error);
-      return res.status(HttpStatus.BAD_REQUEST).json({ status: "Bad request", message: "Authentication failed", statusCode: HttpStatus.UNAUTHORIZED });
+      return res.status(HttpStatus.UNAUTHORIZED).json({
+        status: "Bad request",
+        message: error.message || "Authentication failed",
+        statusCode: HttpStatus.UNAUTHORIZED
+      });
     }
   }
 }
+

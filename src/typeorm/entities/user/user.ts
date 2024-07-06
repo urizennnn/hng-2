@@ -1,5 +1,5 @@
 import { Organization } from '@entity/Organisation/org';
-import { Entity, Column, PrimaryGeneratedColumn, Unique, OneToMany, JoinTable } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Unique, OneToMany, JoinTable, ManyToMany } from 'typeorm';
 
 @Entity()
 @Unique(['userId'])
@@ -23,7 +23,7 @@ export class User {
 	@Column({ nullable: true })
 	phone?: string;
 
-	@OneToMany(() => Organization, org => org.users)
+	@ManyToMany(() => Organization, organizations => organizations.users)
 	@JoinTable()
 	organizations: Organization[];
 }

@@ -1,13 +1,10 @@
-import { Injectable, BadRequestException, InternalServerErrorException } from '@nestjs/common';
-import util from "util"
-import { InjectRepository } from '@nestjs/typeorm';
-import { UserLogin, UserType } from '@user/user.dto';
-import { User } from '@entity/user/user';
-import { comparePassword, hashPassword } from '@utils/helper';
-import { OrganizationType } from '@organisation/org.dto';
 import { Organization } from '@entity/Organisation/org';
+import { User } from '@entity/user/user';
+import { Injectable, BadRequestException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { UserLogin, UserRegister } from '@user/user.dto';
+import { comparePassword, hashPassword } from '@utils/helper';
 import { Repository } from 'typeorm';
-import { validate } from 'class-validator';
 
 @Injectable()
 export class AuthService {
@@ -18,55 +15,33 @@ export class AuthService {
     private readonly orgRepo: Repository<Organization>
   ) { }
 
-  async getResponse(): Promise<string> {
-    return "Hello World!";
+  async register(userDetails: UserRegister): Promise<User> {
+    const existingUser = await this.userRepo.findOne({ where: { email: userDetails.email } });
+    if (existingUser) {
+      throw new BadRequestException('Email already exists');
+    }
+
+    userDetails.password = await hashPassword(userDetails.password);
+
+    const newUser = this.userRepo.create(userDetails);
+    await this.userRepo.save(newUser);
+
+    const organization = this.orgRepo.create({
+      name: `${userDetails.firstName}'s Organisation`,
+      users: [newUser],
+    });
+
+    await this.orgRepo.save(organization);
+
+    return newUser;
   }
 
-  async register(details: UserType): Promise<User> {
-
-    const errors = await validate(details);
-    if (errors.length > 0) {
-      throw new BadRequestException('Validation failed');
+  async login(loginDetails: UserLogin): Promise<User> {
+    const user = await this.userRepo.findOne({ where: { email: loginDetails.email } });
+    if (!user || !(await comparePassword(loginDetails.password, user.password))) {
+      throw new BadRequestException('Invalid email or password');
     }
-
-    try {
-      details.password = await hashPassword(details.password);
-
-      const orgDetails: OrganizationType = {
-        name: `${details.firstName}'s Organisation`,
-      };
-
-      const user = this.userRepo.create(details);
-      await this.userRepo.save(user);
-
-      const org = this.orgRepo.create(orgDetails);
-      org.users = [user];
-      await this.orgRepo.save(org);
-      return user
-    } catch (error) {
-      console.error('Registration error:', error);
-      throw new InternalServerErrorException('Registration failed');
-    }
-  }
-
-
-  async login(details: UserLogin): Promise<User> {
-    try {
-      const user = await this.userRepo.findOne({ where: { email: details.email } })
-      if (!user) {
-        throw new BadRequestException('Invalid email');
-      }
-
-      const isValid = await comparePassword(details.password, user.password);
-
-      if (!isValid) {
-        throw new BadRequestException('Invalid password');
-      }
-
-      return user;
-    } catch (error) {
-      console.error(error);
-      throw error
-    }
+    return user;
   }
 }
+
