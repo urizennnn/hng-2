@@ -29,7 +29,7 @@ export class AuthController {
       console.error(error);
       return res.status(HttpStatus.BAD_REQUEST).json({
         status: "Bad request",
-        message: error.message || "Registration failed",
+        message: "Registration failed",
         statusCode: HttpStatus.BAD_REQUEST
       });
     }
@@ -53,7 +53,7 @@ export class AuthController {
       console.error(error);
       return res.status(HttpStatus.UNAUTHORIZED).json({
         status: "Bad request",
-        message: error.message || "Authentication failed",
+        message: "Authentication failed",
         statusCode: HttpStatus.UNAUTHORIZED
       });
     }

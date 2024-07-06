@@ -13,16 +13,20 @@ export class OrgService {
   ) { }
 
   async getOrgs(email: string): Promise<Organization[]> {
-    const user = await this.userRepo.findOne({
-      where: { email },
-      relations: ['organizations']
-    });
+    try {
+      const user = await this.userRepo.findOne({
+        where: { email },
+        relations: ['organizations']
+      });
 
-    if (!user) {
-      throw new Error('User not found');
+      if (!user) {
+        throw new Error('User not found');
+      }
+
+      return user.organizations;
+    } catch (err) {
+      throw err || new Error('Failed to fetch organizations');
     }
-
-    return user.organizations;
   }
 
   async getOrgById(orgId: string): Promise<Organization> {

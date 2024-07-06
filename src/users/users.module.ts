@@ -4,6 +4,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { User } from '@entity/user/user';
+import { Organization } from '@entity/Organisation/org';
+import { JwtAuth } from 'src/middleware/jwt';
 @Module({
   imports: [
     JwtModule.register({
@@ -11,9 +13,9 @@ import { User } from '@entity/user/user';
       signOptions: {
         expiresIn: process.env.JWT_LIMIT as string
       },
-    }), TypeOrmModule.forFeature([User]),
+    }), TypeOrmModule.forFeature([User, Organization]),
   ],
-  providers: [UsersService],
+  providers: [UsersService, JwtAuth],
   controllers: [UsersController],
 })
 export class UsersModule { }

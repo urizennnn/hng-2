@@ -23,7 +23,7 @@ import { OrgModule } from '@organisation/org.module';
         module: UsersModule,
       },
       {
-        path: '/api/organizations',
+        path: '/api/organisations',
         module: OrgModule,
       },
     ]), TypeOrmModule.forRootAsync({

@@ -3,7 +3,7 @@ import { OrgService } from './org.service';
 import { JwtAuth } from 'src/middleware/jwt';
 import { Request, Response } from 'express';
 import { AuthGuard } from 'src/guards/authGuard';
-import { OrganizationType, AddUserDto, CreateOrgDto } from './org.dto';
+import { AddUserDto, CreateOrgDto } from './org.dto';
 
 @Controller()
 export class OrgController {
@@ -72,7 +72,7 @@ export class OrgController {
       console.error(error);
       return res.status(HttpStatus.BAD_REQUEST).json({
         status: "Bad Request",
-        message: "Failed to create organization",
+        message: "Client Error",
         statusCode: HttpStatus.BAD_REQUEST
       });
     }
@@ -80,7 +80,7 @@ export class OrgController {
 
   @UseGuards(AuthGuard)
   @Post("/:orgId/users")
-  async addUserToOrg(@Req() req: Request, @Res() res: Response, @Param('orgId') orgId: string, @Body() body: AddUserDto) {
+  async addUserToOrg(@Req() _: Request, @Res() res: Response, @Param('orgId') orgId: string, @Body() body: AddUserDto) {
     console.log(body.userId);
     try {
       await this.orgService.addUserToOrg(orgId, body.userId);

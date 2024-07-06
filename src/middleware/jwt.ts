@@ -1,13 +1,16 @@
 import { Injectable, Req, Res } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { Request, Response } from "express";
-import { JwtPayload, decode } from "jsonwebtoken";
+import { decode } from "jsonwebtoken";
 
 
 
 type Payload = {
   email: string;
 };
+
+
+
 @Injectable()
 export class JwtAuth {
   constructor(private readonly jwt: JwtService) { }
