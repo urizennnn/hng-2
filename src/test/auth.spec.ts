@@ -119,7 +119,7 @@ describe('AuthService and AuthController', () => {
       const incompleteUserDetails = {
         firstName: 'John',
         lastName: 'Doe',
-        // email is missing
+        // email: "test@gmail.com",
         password: 'password123',
       };
 
