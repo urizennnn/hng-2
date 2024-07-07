@@ -31,7 +31,6 @@ export class AuthController {
         }
       });
     } catch (error) {
-      console.error(error);
       return res.status(HttpStatus.BAD_REQUEST).json({
         status: "Bad request",
         message: "Registration failed",
@@ -55,7 +54,6 @@ export class AuthController {
         }
       });
     } catch (error) {
-      console.error(error);
       return res.status(HttpStatus.UNAUTHORIZED).json({
         status: "Bad request",
         message: "Authentication failed",
