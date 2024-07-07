@@ -10,9 +10,7 @@ export class AuthGuard implements CanActivate {
     private readonly jwt: JwtAuth
   ) { }
 
-  async canActivate(
-    context: ExecutionContext,
-  ): Promise<boolean> {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const request: Request = context.switchToHttp().getRequest();
     const response: Response = context.switchToHttp().getResponse();
     const token = this.extractTokenFromRequest(request);
@@ -40,13 +38,23 @@ export class AuthGuard implements CanActivate {
     });
 
     await this.refreshTokens(payload, response);
+
     return payload;
   }
 
   private async refreshTokens(payload: any, response: Response): Promise<void> {
-    await Promise.all([
-      this.jwt.clearCookie(response),
-      this.jwt.SendCookie(payload, response)
-    ]);
+    const newToken = this.jwtService.sign({ userId: payload.userId });
+
+    response.clearCookie('refreshToken');
+
+    response.cookie('refreshToken', newToken, {
+      httpOnly: true,
+      signed: true,
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 24 * 60 * 60 * 1000 // 1 day
+    });
+
+    this.jwt.SendCookie({ token: newToken, ...payload }, response);
   }
 }
+
