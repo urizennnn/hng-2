@@ -25,7 +25,7 @@ export class OrgController {
       return res.status(HttpStatus.OK).json({
         status: "success",
         message: "Organizations fetched",
-        data: { organisations }
+        data: organisations
       });
     } catch (error) {
       console.error(error);

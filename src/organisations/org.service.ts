@@ -11,12 +11,11 @@ export class OrgService {
     @InjectRepository(Organization) private readonly orgRepo: Repository<Organization>,
     @InjectRepository(User) private readonly userRepo: Repository<User>
   ) { }
-
   async getOrgs(email: string): Promise<Organization[]> {
     try {
       const user = await this.userRepo.findOne({
         where: { email },
-        relations: ['organizations']
+        relations: ['organizations'],
       });
 
       if (!user) {
@@ -25,7 +24,7 @@ export class OrgService {
 
       return user.organizations;
     } catch (err) {
-      throw err || new Error('Failed to fetch organizations');
+      throw new Error('Failed to fetch organizations');
     }
   }
 
@@ -45,8 +44,11 @@ export class OrgService {
       throw new Error('User not found');
     }
 
-    const org = this.orgRepo.create(orgDetails);
-    org.users = [user];
+    const org = this.orgRepo.create({
+      name: orgDetails.name,
+      description: orgDetails.description,
+      users: [user],
+    })
     await this.orgRepo.save(org);
     return org;
   }
