@@ -45,12 +45,13 @@ export class AuthController {
     try {
       const user = await this.authService.login(loginDetails);
       const accessToken = this.jwt.SendCookie({ email: user.email }, res);
+      const { password, ...userWithoutPassword } = user;
       return res.status(HttpStatus.OK).json({
         status: "success",
         message: "Login successful",
         data: {
           accessToken,
-          user
+          user: userWithoutPassword
         }
       });
     } catch (error) {

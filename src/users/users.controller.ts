@@ -21,7 +21,6 @@ export class UsersController {
     try {
       const email = await this.getUser(req);
       const user = await this.usersService.getUserById(id, email);
-
       return res.status(HttpStatus.OK).json({ "status": "success", "message": "User fetched", "data": user });
     } catch (error) {
       console.error(error);
